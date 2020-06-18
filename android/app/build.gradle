@@ -44,6 +44,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -64,6 +65,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
-    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation 'com.android.support:multidex:1.0.3'
+    //classpath 'com.android.tools.build:gradle:4.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -1,18 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:time_tracker_flutter_course/app/in/email_sign_in_page.dart';
 import 'package:time_tracker_flutter_course/app/in/sign_in_button.dart';
 import 'package:time_tracker_flutter_course/app/in/social_sign_in_button.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 
+
 class SignInPage extends StatelessWidget {
-  SignInPage({@required this.auth});
-
-  final AuthBase auth;
-
-  Future<void> _signInAnonymously() async {
+  Future<void> _signInAnonymously(BuildContext context) async {
     //always use future for async (marks asynchronous methods) operations
     try {
+      final auth = Provider.of<AuthBase>(context);
       await auth
           .signInAnonymously(); //use await to suspend execution until future return a value
     } catch (e) {
@@ -20,9 +19,10 @@ class SignInPage extends StatelessWidget {
     }
   }
 
-  Future<void> _signInWithGoogle() async {
+  Future<void> _signInWithGoogle(BuildContext context) async {
     //always use future for async (marks asynchronous methods) operations
     try {
+      final auth = Provider.of<AuthBase>(context);
       await auth
           .signInWithGoogle(); //use await to suspend execution until future return a value
     } catch (e) {
@@ -39,7 +39,7 @@ class SignInPage extends StatelessWidget {
         //a route that will be pushed and will be used as the email sign in page
         fullscreenDialog: true,
         //A method used to specify how the new route screen will be introduced (Entrance effects)
-        builder: (context) => EmailSignInPage(auth: auth),
+        builder: (context) => EmailSignInPage(),
       ),
     );
   }
@@ -86,7 +86,7 @@ class SignInPage extends StatelessWidget {
             text: 'Sign in with Google',
             textColor: Colors.black87,
             color: Colors.white,
-            onPressed: _signInWithGoogle,
+            onPressed: () => _signInWithGoogle(context),
           ),
           SizedBox(height: 8.0),
           SocialSignInButton(
@@ -115,7 +115,7 @@ class SignInPage extends StatelessWidget {
             text: 'Go anonymous',
             textColor: Colors.black,
             color: Colors.lime[300],
-            onPressed: _signInAnonymously,
+            onPressed: () => _signInAnonymously(context),
           ),
         ],
       ),
