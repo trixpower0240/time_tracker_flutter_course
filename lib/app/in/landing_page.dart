@@ -16,7 +16,7 @@ class LandingPage extends StatelessWidget {
             User user = snapshot.data;
             if (user == null) {
               //if the user had no user id, go to sign in page
-              return SignInPage();
+              return SignInPage.create(context);
             }
             return HomePage(
                 //if user had id (signed in), go to home page

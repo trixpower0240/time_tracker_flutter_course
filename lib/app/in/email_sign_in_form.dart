@@ -7,7 +7,7 @@ import 'package:time_tracker_flutter_course/common_widgets/platform_alert_dialog
 import 'package:time_tracker_flutter_course/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 
-enum EmailSignInFormType { signIn, register }
+import 'email_sign_in_model.dart';
 
 class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidators {
   @override
@@ -38,7 +38,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     super.dispose();
   }
 
-  void _submit() async {
+  Future<void> _submit() async {
     setState(() {
       _submitted = true;
       _isLoading = true;
