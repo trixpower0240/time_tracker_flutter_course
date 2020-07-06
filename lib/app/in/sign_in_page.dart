@@ -3,24 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker_flutter_course/app/in/email_sign_in_page.dart';
-import 'package:time_tracker_flutter_course/app/in/sign_in_bloc.dart';
+import 'package:time_tracker_flutter_course/app/in/sign_in_manager.dart';
 import 'package:time_tracker_flutter_course/app/in/sign_in_button.dart';
 import 'package:time_tracker_flutter_course/app/in/social_sign_in_button.dart';
 import 'package:time_tracker_flutter_course/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 
 class SignInPage extends StatelessWidget {
-  const SignInPage({Key key, @required this.bloc}) : super(key: key);
-  final SignInBloc bloc;
+  const SignInPage({Key key, @required this.manager, @required this.isLoading})
+      : super(key: key);
+  final SignInManager manager;
+  final bool isLoading;
 
   static Widget create(BuildContext context) {
     final auth = Provider.of<AuthBase>(context);
-    return Provider<SignInBloc>(
+    return ChangeNotifierProvider<ValueNotifier<bool>>(
       // ignore: deprecated_member_use
-      builder: (_) => SignInBloc(auth: auth),
-      dispose: (context, bloc) => bloc.dispose(),
-      child: Consumer<SignInBloc>(
-        builder: (context, bloc, _) => SignInPage(bloc: bloc),
+      builder: (_) => ValueNotifier<bool>(false),
+      child: Consumer<ValueNotifier<bool>>(
+        builder: (_, isLoading, __) => Provider<SignInManager>(
+          // ignore: deprecated_member_use
+          builder: (_) => SignInManager(auth: auth, isLoading: isLoading),
+          child: Consumer<SignInManager>(
+            builder: (context, manager, _) => SignInPage(
+              manager: manager,
+              isLoading: isLoading.value,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -35,7 +45,7 @@ class SignInPage extends StatelessWidget {
   Future<void> _signInAnonymously(BuildContext context) async {
     //always use future for async (marks asynchronous methods) operations
     try {
-      await bloc
+      await manager
           .signInAnonymously(); //use await to suspend execution until future return a value
     } on PlatformException catch (e) {
       _showSignInError(context, e);
@@ -45,7 +55,7 @@ class SignInPage extends StatelessWidget {
   Future<void> _signInWithGoogle(BuildContext context) async {
     //always use future for async (marks asynchronous methods) operations
     try {
-      await bloc
+      await manager
           .signInWithGoogle(); //use await to suspend execution until future return a value
     } on PlatformException catch (e) {
       if (e.code != 'ERROR_ABORTED_BY_USER') {
@@ -76,18 +86,13 @@ class SignInPage extends StatelessWidget {
         title: Text('Time Tracker'), //Title widget for our sign in page
         elevation: 2.0, //shadow under the head bar
       ),
-      body: StreamBuilder<bool>(
-          stream: bloc.isLoadingStream,
-          initialData: false,
-          builder: (context, snapshot) {
-            return _buildContent(context, snapshot.data);
-          }),
+      body: _buildContent(context),
       backgroundColor:
           Colors.grey[200], //background color -> grey with shade of 200
     );
   }
 
-  Widget _buildContent(BuildContext context, bool isLoading) {
+  Widget _buildContent(BuildContext context) {
     //body of the scaffold/page
     return Padding(
       padding: EdgeInsets.all(16.0),
@@ -101,7 +106,7 @@ class SignInPage extends StatelessWidget {
           //a list of children widgets that share similar properties
           SizedBox(
             height: 50.0,
-            child: _buildHeader(isLoading),
+            child: _buildHeader(),
           ),
           SizedBox(height: 48.0),
           //used for spacing between buttons and the "sign in" text
@@ -147,7 +152,7 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(bool isLoading) {
+  Widget _buildHeader() {
     if (isLoading) {
       return Center(
         child: CircularProgressIndicator(),

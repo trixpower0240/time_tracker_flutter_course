@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:html';
 
 import 'package:flutter/foundation.dart';
 import 'package:time_tracker_flutter_course/app/in/email_sign_in_model.dart';
@@ -9,6 +8,7 @@ class EmailSignInBloc {
   EmailSignInBloc({@required this.auth});
 
   final AuthBase auth;
+
   final StreamController<EmailSignInModel> _modelController =
       StreamController<EmailSignInModel>();
 
