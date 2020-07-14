@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:time_tracker_flutter_course/app/in/home_page.dart';
+import 'file:///C:/Users/laith/AndroidStudioProjects/time_tracker_flutter_course/lib/app/in/home/jobs_page.dart';
 import 'package:time_tracker_flutter_course/app/in/sign_in_page.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
+import 'package:time_tracker_flutter_course/services/database.dart';
 
 class LandingPage extends StatelessWidget {
   //The page used to decide whether the user should sign_in or go to home page
@@ -18,9 +19,11 @@ class LandingPage extends StatelessWidget {
               //if the user had no user id, go to sign in page
               return SignInPage.create(context);
             }
-            return HomePage(
-                //if user had id (signed in), go to home page
-                );
+            return Provider<Database>(
+              // ignore: deprecated_member_use
+              builder: (_) => FirestoreDatabase(uid: user.uid),
+              child: JobsPage(), //if user had id (signed in), go to home page
+            );
           } else {
             return Scaffold(
               body: Center(
