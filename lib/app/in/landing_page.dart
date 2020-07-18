@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'file:///C:/Users/laith/AndroidStudioProjects/time_tracker_flutter_course/lib/app/in/home/jobs_page.dart';
+import 'file:///C:/Users/laith/AndroidStudioProjects/time_tracker_flutter_course/lib/app/in/home/jobs/jobs_page.dart';
 import 'package:time_tracker_flutter_course/app/in/sign_in_page.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 import 'package:time_tracker_flutter_course/services/database.dart';
