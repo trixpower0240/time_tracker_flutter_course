@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:time_tracker_flutter_course/app/in/home/models/job.dart';
 import 'package:time_tracker_flutter_course/common_widgets/platform_alert_dialog.dart';
 import 'package:time_tracker_flutter_course/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:time_tracker_flutter_course/services/database.dart';
-import 'dart:async';
 
 class EditJobPage extends StatefulWidget {
   const EditJobPage({Key key, @required this.database, this.job})
@@ -13,8 +11,11 @@ class EditJobPage extends StatefulWidget {
   final Database database;
   final Job job;
 
-  static Future<void> show(BuildContext context, {Job job}) async {
-    final database = Provider.of<Database>(context);
+  static Future<void> show(
+    BuildContext context, {
+    Database database,
+    Job job,
+  }) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EditJobPage(database: database, job: job),
@@ -95,7 +96,6 @@ class _EditJobPageState extends State<EditJobPage> {
             onPressed: _submit,
           ),
         ],
-        centerTitle: true,
       ),
       body: _buildContents(),
       backgroundColor: Colors.grey[200],
@@ -142,7 +142,7 @@ class _EditJobPageState extends State<EditJobPage> {
           decimal: false,
         ),
         onSaved: (value) => _ratePerHour = int.tryParse(value) ?? 0,
-      )
+      ),
     ];
   }
 }

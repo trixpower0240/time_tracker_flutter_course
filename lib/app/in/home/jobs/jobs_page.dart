@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:time_tracker_flutter_course/app/in/home/job_entries/job_entries_page.dart';
 import 'package:time_tracker_flutter_course/app/in/home/jobs/edit_job_page.dart';
-import 'package:time_tracker_flutter_course/app/in/home/jobs/empty_content.dart';
 import 'package:time_tracker_flutter_course/app/in/home/jobs/job_list_tile.dart';
 import 'package:time_tracker_flutter_course/app/in/home/jobs/list_items_builder.dart';
 import 'package:time_tracker_flutter_course/app/in/home/models/job.dart';
@@ -9,17 +9,13 @@ import 'package:time_tracker_flutter_course/common_widgets/platform_alert_dialog
 import 'package:time_tracker_flutter_course/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 import 'package:time_tracker_flutter_course/services/database.dart';
-import 'dart:async';
 import 'package:flutter/services.dart';
 
 class JobsPage extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
-    //always use future for async (marks asynchronous methods) operations
     try {
       final auth = Provider.of<AuthBase>(context);
-      await auth.singOut();
-      //use await to suspend execution until future return a value
-
+      await auth.signOut();
     } catch (e) {
       print(e.toString());
     }
@@ -54,12 +50,14 @@ class JobsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Jobs'),
-        centerTitle: true,
         actions: <Widget>[
           FlatButton(
             child: Text(
               'Logout',
-              style: TextStyle(fontSize: 18, color: Colors.white),
+              style: TextStyle(
+                fontSize: 18.0,
+                color: Colors.white,
+              ),
             ),
             onPressed: () => _confirmSignOut(context),
           ),
@@ -67,8 +65,11 @@ class JobsPage extends StatelessWidget {
       ),
       body: _buildContents(context),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => EditJobPage.show(context),
         child: Icon(Icons.add),
+        onPressed: () => EditJobPage.show(
+          context,
+          database: Provider.of<Database>(context),
+        ),
       ),
     );
   }
@@ -82,14 +83,12 @@ class JobsPage extends StatelessWidget {
           snapshot: snapshot,
           itemBuilder: (context, job) => Dismissible(
             key: Key('job-${job.id}'),
-            background: Container(
-              color: Colors.red,
-            ),
+            background: Container(color: Colors.red),
             direction: DismissDirection.endToStart,
             onDismissed: (direction) => _delete(context, job),
             child: JobListTile(
               job: job,
-              onTap: () => EditJobPage.show(context, job: job),
+              onTap: () => JobEntriesPage.show(context, job),
             ),
           ),
         );

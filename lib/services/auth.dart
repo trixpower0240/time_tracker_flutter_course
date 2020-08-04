@@ -18,7 +18,7 @@ abstract class AuthBase {
 
   Future<User> signInWithGoogle();
 
-  Future<void> singOut();
+  Future<void> signOut();
 
   Future<User> signInWithEmailAndPassword(String email, String password);
 
@@ -96,7 +96,7 @@ class Auth implements AuthBase {
   }
 
   @override
-  Future<void> singOut() async {
+  Future<void> signOut() async {
     final googleSignIn = GoogleSignIn();
     await googleSignIn.signOut();
     await FirebaseAuth.instance.signOut();
